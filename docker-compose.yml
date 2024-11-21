@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  sequence-service:
+    image: highqualitycoffee/seq_mem_spring:latest
+    container_name: seq_mem_spring
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://seq_mem_db:3306/member_database  # MariaDB의 서비스 이름을 사용하여 연결
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+    depends_on:
+      - db
+
+  db:
+    image: highqualitycoffee/seq_mem_db:latest
+    container_name: seq_mem_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=member_database
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+
+    ports:
+      - "3307:3306"
