@@ -24,6 +24,9 @@ public class MemberEntity {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
+    @Column
+    private String randomKey;
+
     @Column(name = "birth", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date birth;

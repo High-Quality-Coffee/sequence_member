@@ -3,12 +3,12 @@ package sequence.sequence_member.controller;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import sequence.sequence_member.dto.LoginDTO;
+import sequence.sequence_member.dto.LoginResDTO;
 import sequence.sequence_member.dto.MemberDTO;
 import sequence.sequence_member.service.MemberService;
 
@@ -26,12 +26,29 @@ public class MemberController {
     }
 
     @PostMapping("/api/member/login")
-    public String login(@ModelAttribute @RequestBody LoginDTO loginDTO, HttpSession session){
-        LoginDTO loginResult =  memberService.loginCheck(loginDTO);
-        if(loginResult != null) {
-            session.setAttribute("user_id", loginResult.getUser_id());
-            return "complete";
-        }else return "index";
+    public ResponseEntity<LoginResDTO> login(@RequestBody LoginDTO loginDTO, HttpSession session){
+        LoginResDTO loginResult =  memberService.loginCheck(loginDTO);
+        if("success".equals(loginResult.getMessage())) {
+            return ResponseEntity.ok(loginResult);
+
+        }else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(loginResult);
+        }
     }
+
+    @PostMapping("/api/member/validate")
+    public ResponseEntity<String> validateUser(@RequestParam String user_id, @RequestParam String randomKey) {
+        boolean isValid = memberService.validate(user_id, randomKey);
+        if (isValid) {
+            return ResponseEntity.ok("사용자 인증 성공");
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 인증 실패");
+        }
+    }
+
+
+
+
 
 }
