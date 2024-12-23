@@ -15,7 +15,7 @@ public class EducationEntity {
     private Long educationId;
 
     @OneToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn
     private MemberEntity member;
 
     @Column(name = "school_name", nullable = false, length = 100)
@@ -56,7 +56,7 @@ public class EducationEntity {
         UI_UX_DESIGN, FRONT_END, BACK_END, PM;
     }
 
-    public static EducationEntity toEducationEntity(MemberDTO memberDTO){
+    public static EducationEntity toEducationEntity(MemberDTO memberDTO, MemberEntity memberEntity){
         EducationEntity educationEntity = new EducationEntity();
 
         educationEntity.setSchoolName(memberDTO.getSchool_name());
@@ -66,6 +66,8 @@ public class EducationEntity {
         educationEntity.setDegree(memberDTO.getDegree());
         educationEntity.setSkillCategory(memberDTO.getSkill_category());
         educationEntity.setDesiredJob(memberDTO.getDesired_job());
+        educationEntity.setMember(memberEntity);
+
         return educationEntity;
     }
 }

@@ -15,7 +15,7 @@ public class ExperienceEntity {
     private Long experienceId;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn
     private MemberEntity member;
 
     @Column
@@ -28,12 +28,14 @@ public class ExperienceEntity {
     @Column
     private String activityDescription;
 
-    public static ExperienceEntity toExperienceEntity(MemberDTO memberDTO){
+    public static ExperienceEntity toExperienceEntity(MemberDTO memberDTO, MemberEntity memberEntity){
         ExperienceEntity experienceEntity = new ExperienceEntity();
 
         experienceEntity.setActivityName(memberDTO.getActivity_name());
         experienceEntity.setActivityDuration(memberDTO.getActivity_duration());
         experienceEntity.setActivityDescription(memberDTO.getActivity_description());
+        experienceEntity.setMember(memberEntity);
+
         return experienceEntity;
     }
 }

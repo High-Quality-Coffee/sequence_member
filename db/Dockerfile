@@ -4,7 +4,7 @@ FROM mariadb:lts
 COPY member_database.sql /docker-entrypoint-initdb.d/
 
 # 환경 변수 설정
-ENV MYSQL_ROOT_PASSWORD root
+ENV MYSQL_ROOT_PASSWORD 7228
 ENV MYSQL_DATABASE member_database
-ENV MYSQL_USER root
-ENV MYSQL_PASSWORD root
+ENV MYSQL_USER gw
+ENV MYSQL_PASSWORD 7228

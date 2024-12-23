@@ -2,8 +2,12 @@ package sequence.sequence_member.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import sequence.sequence_member.dto.MemberDTO;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,21 +15,19 @@ import java.util.List;
 @Data
 @Table(name = "user")
 public class MemberEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false, length = 45, unique = true)
-    private String userId;
+    @Column(name = "username", nullable = false, length = 45, unique = true)
+    private String username;
 
-    @Column(name="user_pwd", nullable = false, length = 150)
-    private String userPwd;
+    @Column(name="password", nullable = false, length = 150)
+    private String password;
 
     @Column(name = "name", nullable = false, length = 45)
     private String name;
-
-    @Column
-    private String randomKey;
 
     @Column(name = "birth", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -52,15 +54,15 @@ public class MemberEntity {
 
     // AwardEntity와의 일대다 관계 설정
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AwardEntity> awards;
+    private List<AwardEntity> awards=new ArrayList<>();
 
     // CareerEntity와의 일대다 관계 설정
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CareerEntity> careers;
+    private List<CareerEntity> careers=new ArrayList<>();
 
     //ExperienceEntity와의 일대다 관계 설정
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ExperienceEntity> experiences;
+    private List<ExperienceEntity> experiences=new ArrayList<>();
 
     @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     private EducationEntity education;
@@ -71,11 +73,11 @@ public class MemberEntity {
 
     public static MemberEntity toMemberEntity(MemberDTO memberDTO){
         MemberEntity memberEntity = new MemberEntity();
-        memberEntity.setUserId(memberDTO.getUser_id());
-        memberEntity.setUserPwd(memberDTO.getUser_pwd());
+        memberEntity.setUsername(memberDTO.getUsername());
+        memberEntity.setPassword(memberDTO.getPassword());
         memberEntity.setName(memberDTO.getName());
         memberEntity.setBirth(memberDTO.getBirth());
-        memberEntity.setGender(Gender.valueOf(memberDTO.getGender().toString().toUpperCase()));
+        memberEntity.setGender(memberDTO.getGender());
         memberEntity.setAddress(memberDTO.getAddress());
         memberEntity.setPhone(memberDTO.getPhone());
         memberEntity.setEmail(memberDTO.getEmail());

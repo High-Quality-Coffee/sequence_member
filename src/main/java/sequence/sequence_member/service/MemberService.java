@@ -2,15 +2,17 @@ package sequence.sequence_member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import sequence.sequence_member.dto.LoginDTO;
-import sequence.sequence_member.dto.LoginResDTO;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 import sequence.sequence_member.dto.MemberDTO;
 import sequence.sequence_member.entity.*;
 import sequence.sequence_member.repository.*;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -21,46 +23,46 @@ public class MemberService {
     private final CareerRepository careerRepository;
     private final EducationRepository educationRepository;
     private final ExperienceRepository experienceRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public void save(MemberDTO memberDTO){
-        MemberEntity memberEntity = MemberEntity.toMemberEntity(memberDTO);
-        ExperienceEntity experienceEntity = ExperienceEntity.toExperienceEntity(memberDTO);
-        EducationEntity educationEntity = EducationEntity.toEducationEntity(memberDTO);
-        CareerEntity careerEntity = CareerEntity.toCareerEntity(memberDTO);
-        AwardEntity awardEntity = AwardEntity.toAwardEntity(memberDTO);
 
+        //memberDTO의 비밀번호 값을 암호화하여 memberDTO에 저장하고 memberEntity로 변환하여 저장
+        //엔티티 클래스는 데이터베이스 구조를 반영해야 하며, 비즈니스 로직(회원가입, 로그인, 비밀번호 암호화)과 분리되어야 한다.
+        //그러므로, 엔티티 클래스에서 비밀번호 암호화를 하는 것은 적절하지 않다고 판단하여 service 단에서 처리.
+        memberDTO.setPassword(bCryptPasswordEncoder.encode(memberDTO.getPassword()));
+
+        MemberEntity memberEntity = MemberEntity.toMemberEntity(memberDTO);
+        //먼저 member 정보를 저장하고 나중에 외래키 값을 저장하기 위해서 멤버 정보를 먼저 저장
         memberRepository.save(memberEntity);
+
+        MemberEntity memberEntityCopy =  memberRepository.findByUsername(memberDTO.getUsername()).get();
+        AwardEntity awardEntity = AwardEntity.toAwardEntity(memberDTO,memberEntityCopy);
+        ExperienceEntity experienceEntity = ExperienceEntity.toExperienceEntity(memberDTO,memberEntityCopy);
+        EducationEntity educationEntity = EducationEntity.toEducationEntity(memberDTO,memberEntityCopy);
+        CareerEntity careerEntity = CareerEntity.toCareerEntity(memberDTO,memberEntityCopy);
+
         experienceRepository.save(experienceEntity);
         educationRepository.save(educationEntity);
         careerRepository.save(careerEntity);
         awardRepository.save(awardEntity);
     }
 
-
-
-    public LoginResDTO loginCheck(LoginDTO loginDTO){
-        Optional<MemberEntity> byMemberEntity =  memberRepository.findByUserId(loginDTO.getUser_id());
-        if(byMemberEntity.isPresent()){
-            MemberEntity memberEntity =  byMemberEntity.get();
-            if(memberEntity.getUserPwd().equals(loginDTO.getUser_pwd())){
-                //로그인 성공 시 처리 로직
-                String randomKey = UUID.randomUUID().toString();
-                memberEntity.setRandomKey(randomKey);
-                memberRepository.save(memberEntity);
-                return new LoginResDTO("success",randomKey,loginDTO.getUser_id());
-            } else {
-                return new LoginResDTO("fail",null, loginDTO.getUser_id());
-            }
-        }else return new LoginResDTO("fail", null, loginDTO.getUser_id());
-
-    }
-
-    public boolean validate(String userId, String randomKey) {
-        Optional<MemberEntity> member = memberRepository.findByUserId(userId);
-        if (member.isPresent()) {
-            // 사용자 랜덤키 검증
-            return randomKey.equals(member.get().getRandomKey());
+    /* 회원가입 시, 유효성 체크 */
+    public Map<String, String> validateHandling(Errors errors) {
+        if (!errors.hasErrors()) {
+            // Errors가 없을 경우 빈 Map 반환
+            //외부에서 수정못하도록 불변객체로 변환
+            return Map.of();
         }
-        return false; // 사용자가 없거나 랜덤키가 틀린 경우
+
+        Map<String, String> validatorResult = new HashMap<>();
+        for (FieldError error : errors.getFieldErrors()) {
+            validatorResult.put(error.getField(), error.getDefaultMessage());
+        }
+        //외부에서 수정못하도록 불변 객체로 변환
+        return Collections.unmodifiableMap(validatorResult);
     }
+
+
 }

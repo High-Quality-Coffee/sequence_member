@@ -7,8 +7,8 @@ services:
       - "8080:8080"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://seq_mem_db:3306/member_database  # MariaDB의 서비스 이름을 사용하여 연결
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_USERNAME=gw
+      - SPRING_DATASOURCE_PASSWORD=7228
     depends_on:
       - db
     networks: # 네트워크 설정
@@ -18,10 +18,10 @@ services:
     image: highqualitycoffee/seq_mem_db:latest
     container_name: seq_mem_db
     environment:
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=7228
       - MYSQL_DATABASE=member_database
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=root
+      - MYSQL_USER=gw
+      - MYSQL_PASSWORD=7228
     volumes:
       - ./mariadb_data:/var/lib/mysql
     networks: # 네트워크 설정으로 서비스 간 통신을 가능하게 함
@@ -35,8 +35,8 @@ services:
     container_name: phpmyadmin # phpMyAdmin 컨테이너 이름 설정
     environment: # phpMyAdmin 설정을 위한 환경 변수
       PMA_HOST: db # phpMyAdmin이 연결할 데이터베이스 서비스 이름 (위의 `db` 서비스와 연결)
-      PMA_USER: root # phpMyAdmin에서 사용할 데이터베이스 사용자
-      PMA_PASSWORD: root # 데이터베이스 사용자 비밀번호
+      PMA_USER: gw # phpMyAdmin에서 사용할 데이터베이스 사용자
+      PMA_PASSWORD: 7228 # 데이터베이스 사용자 비밀번호
     ports: # 포트 설정으로 호스트와 컨테이너 간 연결
       - "8082:80" # 호스트의 8080 포트를 phpMyAdmin의 80 포트에 매핑
     depends_on: # 컨테이너 실행 순서를 정의

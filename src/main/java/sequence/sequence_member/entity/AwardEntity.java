@@ -2,7 +2,9 @@ package sequence.sequence_member.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import sequence.sequence_member.dto.MemberDTO;
+import sequence.sequence_member.repository.MemberRepository;
 
 import java.util.Date;
 
@@ -15,7 +17,7 @@ public class AwardEntity {
     private Long awardId;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn
     private MemberEntity member;
 
     @Column
@@ -28,12 +30,13 @@ public class AwardEntity {
     @Column
     private String awardDescription;
 
-    public static AwardEntity toAwardEntity(MemberDTO memberDTO){
+    public static AwardEntity toAwardEntity(MemberDTO memberDTO, MemberEntity memberEntity){
         AwardEntity awardEntity = new AwardEntity();
 
         awardEntity.setAwardName(memberDTO.getAward_name());
         awardEntity.setAwardDuration(memberDTO.getAward_duration());
         awardEntity.setAwardDescription(memberDTO.getAward_description());
+        awardEntity.setMember(memberEntity);
 
         return awardEntity;
     }

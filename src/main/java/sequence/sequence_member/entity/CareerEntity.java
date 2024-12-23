@@ -15,7 +15,7 @@ public class CareerEntity {
     private Long career_id;
 
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn
     private MemberEntity member;
 
     @Column(name = "career_name", length = 100)
@@ -28,12 +28,13 @@ public class CareerEntity {
     @Column
     private String careerDescription;
 
-    public static CareerEntity toCareerEntity(MemberDTO memberDTO){
+    public static CareerEntity toCareerEntity(MemberDTO memberDTO, MemberEntity memberEntity){
         CareerEntity careerEntity = new CareerEntity();
 
         careerEntity.setCareerName(memberDTO.getCareer_name());
         careerEntity.setCareerDuration(memberDTO.getCareer_duration());
         careerEntity.setCareerDescription(memberDTO.getCareer_description());
+        careerEntity.setMember(memberEntity);
 
         return careerEntity;
     }

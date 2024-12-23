@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- 생성 시간: 24-12-01 15:11
+-- 생성 시간: 24-12-03 14:02
 -- 서버 버전: 11.4.4-MariaDB-ubu2404
 -- PHP 버전: 8.2.8
 
@@ -173,7 +173,7 @@ INSERT INTO `user` (`id`, `address`, `birth`, `email`, `gender`, `introduction`,
 (4, '123 Example St', '1990-01-01', 'gw2000sk25@example.com', 'M', '안녕방가방가', 'John Doe', '01012345678', 'gw2000sk25', 'examplePassword', 'www.google.com', NULL),
 (5, '123 Example St', '1990-01-01', 'gw2000sk253@example.com', 'M', '안녕방가방가', 'John Doe', '01012345678', 'gw2000sk253', 'examplePassword', 'www.google.com', NULL),
 (6, '123 Example St', '1990-01-01', 'gw2000sk1253@example.com', 'M', '안녕방가방가', 'John Doe', '01012345678', 'gw2000sk2153', 'examplePassword', 'www.google.com', NULL),
-(7, '123 Example St', '1990-01-01', 'gw2000sk23@example.com', 'M', '안녕방가방가', 'John Doe', '01012345678', 'gw2000sk23', 'examplePassword', 'www.google.com', NULL),
+(7, '123 Example St', '1990-01-01', 'gw2000sk23@example.com', 'M', '안녕방가방가', 'John Doe', '01012345678', 'gw2000sk23', 'examplePassword', 'www.google.com', '0713c8ad-ee95-4054-8fd0-8af6efbb09df'),
 (8, '123 Example St', '1990-01-01', 'gw2000sk223@example.com', 'M', '안녕방가방가', 'John Doe', '01012345678', 'gw2000sk223', 'examplePassword', 'www.google.com', '455a7c96-5f11-4a21-88a3-8166bcace588'),
 (9, '123 Example St', '1990-01-01', 'pgw223@example.com', 'M', '안녕방가방가', 'John Doe', '01012345678', 'pgw', 'examplePassword', 'www.google.com', NULL);
 

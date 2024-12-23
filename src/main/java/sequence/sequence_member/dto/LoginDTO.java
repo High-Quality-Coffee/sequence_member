@@ -15,8 +15,8 @@ public class LoginDTO {
 
     public static LoginDTO toLoginDTO(MemberEntity memberEntity){
         LoginDTO loginDTO  = new LoginDTO();
-        loginDTO.setUser_id(memberEntity.getUserId());
-        loginDTO.setUser_pwd(memberEntity.getUserPwd());
+        loginDTO.setUser_id(memberEntity.getUsername());
+        loginDTO.setUser_pwd(memberEntity.getPassword());
 
         return loginDTO;
     }
