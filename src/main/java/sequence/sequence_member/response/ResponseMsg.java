@@ -7,12 +7,12 @@ import java.util.Map;
 @Data
 public class ResponseMsg {
     private int status;
-    private String msg;
+    private String message;
     private Map<String, String> resultMsg;
 
-    public ResponseMsg(int status, String msg,  Map<String, String> resultMsg){
+    public ResponseMsg(int status, String message,  Map<String, String> resultMsg){
         this.status = status;
-        this.msg=msg;
+        this.message=message;
         this.resultMsg = resultMsg;
     }
 

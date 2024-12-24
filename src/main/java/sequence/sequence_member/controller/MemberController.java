@@ -1,8 +1,11 @@
 package sequence.sequence_member.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -12,6 +15,7 @@ import sequence.sequence_member.dto.MemberDTO;
 import sequence.sequence_member.response.ResponseMsg;
 import sequence.sequence_member.service.MemberService;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -23,7 +27,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/api/user")
-    public ResponseEntity<ResponseMsg> join(@Valid @RequestBody MemberDTO memberDTO, Errors errors){
+    public ResponseEntity<ResponseMsg> join(@RequestBody @Valid MemberDTO memberDTO, Errors errors){
         //회원가입 유효성 검사 실패 시
         if(errors.hasErrors()){
             Map<String, String> validatorResult = memberService.validateHandling(errors);
@@ -33,8 +37,7 @@ public class MemberController {
         }
 
         memberService.save(memberDTO);
-        ResponseMsg responseMsg = new ResponseMsg(200, "ok", null);
-
+        ResponseMsg responseMsg = new ResponseMsg(200, "회원가입이 완료되었습니다.", null);
         return ResponseEntity.ok(responseMsg);
     }
 
@@ -50,6 +53,19 @@ public class MemberController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return "mainPage " + username;
+    }
+
+    @GetMapping("/api/check_username")
+    public ResponseEntity<ResponseMsg> checkUser(@RequestParam(required = false) String username){
+
+        //중복 아이디가 존재하는 경우
+        if(memberService.checkUser(username)){
+            ResponseMsg responseMsg = new ResponseMsg(400, "동일한 아이디가 이미 존재합니다.", null);
+            return ResponseEntity.badRequest().body(responseMsg);
+        }
+        //아이디가 존재하지 않는 경우
+        ResponseMsg responseMsg = new ResponseMsg(200, "사용가능한 아이디 입니다.", null);
+        return ResponseEntity.ok(responseMsg);
     }
 
 }

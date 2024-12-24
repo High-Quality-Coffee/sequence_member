@@ -64,5 +64,9 @@ public class MemberService {
         return Collections.unmodifiableMap(validatorResult);
     }
 
+    public boolean checkUser(String username){
+        return memberRepository.findByUsername(username).isPresent();
+    }
+
 
 }
