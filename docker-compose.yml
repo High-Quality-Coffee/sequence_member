@@ -23,7 +23,7 @@ services:
       - MYSQL_USER=gw
       - MYSQL_PASSWORD=7228
     volumes:
-      - ./mariadb_data:/var/lib/mysql
+      - ./mariadb_data_new:/var/lib/mysql
     networks: # 네트워크 설정으로 서비스 간 통신을 가능하게 함
       - app-network # 정의된 네트워크 이름
     restart: always # 컨테이너가 중단되었을 때 자동으로 재시작
@@ -50,4 +50,4 @@ networks:
     driver: bridge # 브리지 네트워크 드라이버를 사용하여 동일 네트워크 상에서 통신 가능
 
 volumes:
-  mariadb_data:
+  mariadb_data_new:
