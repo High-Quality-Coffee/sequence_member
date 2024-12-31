@@ -55,8 +55,14 @@ public class MemberController {
         return "mainPage " + username;
     }
 
-    @GetMapping("/api/check_username")
-    public ResponseEntity<ResponseMsg> checkUser(@RequestParam(required = false) String username){
+    @RequestMapping("/api/check_username")
+    public ResponseEntity<ResponseMsg> checkUser(@RequestParam(name = "username",required = false) String username){
+        System.out.println(username);
+        // 파라미터 유효성 검사
+        if (username == null || username.trim().isEmpty()) {
+            ResponseMsg responseMsg = new ResponseMsg(400, "아이디를 입력해주세요.", null);
+            return ResponseEntity.badRequest().body(responseMsg);
+        }
 
         //중복 아이디가 존재하는 경우
         if(memberService.checkUser(username)){

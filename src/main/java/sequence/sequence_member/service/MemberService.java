@@ -65,6 +65,10 @@ public class MemberService {
     }
 
     public boolean checkUser(String username){
+
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty.");
+        }
         return memberRepository.findByUsername(username).isPresent();
     }
 
